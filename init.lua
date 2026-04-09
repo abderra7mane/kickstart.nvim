@@ -392,8 +392,52 @@ require('lazy').setup({
         --   mappings = {
         --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
         --   },
+        --   file_ignore_patterns = {
+        --     'node_modules',
+        --     '%.git/',        -- ignore .git folder
+        --     'dist/',         -- ignore build output
+        --     'build/',
+        --     '.next/',        -- next.js build output
+        --     '%.lock',        -- ignore lockfiles like package-lock.json
+        --   }
         -- },
-        -- pickers = {}
+        -- pickers = {
+        --   find_files = {
+        --     -- no_ignore = true,
+        --     -- hidden = true,
+        --     find_command = {
+        --       'fd',
+        --       '--type', 'f', 
+        --       '--no-ignore', 
+        --       '--hidden', 
+        --       '--strip-cwd-prefix',
+        --       '--exclude', 'node_modules', 
+        --       '--exclude', '.git',
+        --       '--exclude', 'dist',
+        --       '--exclude', 'build',
+        --       '--exclude', '.next',
+        --       '--exclude', 'out',
+        --       '--exclude', '.nuxt',
+        --       '--exclude', 'coverage',
+        --       '--exclude', '.turbo',
+        --     },
+        --   },
+        --   live_grep = {
+        --     additional_args = {
+        --       '--no-ignore',
+        --       '--hidden',
+        --       '--glob', '!node_modules',
+        --       '--glob', '!.git',
+        --       '--glob', '!dist',
+        --       '--glob', '!build',
+        --       '--glob', '!.next',
+        --       '--glob', '!out',
+        --       '--glob', '!.nuxt',
+        --       '--glob', '!coverage',
+        --       '--glob', '!.turbo',
+        --     }
+        --   },
+        -- },
         extensions = {
           ['ui-select'] = { require('telescope.themes').get_dropdown() },
         },
@@ -408,6 +452,12 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      -- vim.keymap.set('n', '<leader>sF', function()
+      --   builtin.find_files {
+      --     no_ignore = true,
+      --     hidden = false,
+      --   }
+      -- end, { desc = '[S]earch all [F]iles including ignored' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set({ 'n', 'v' }, '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -609,7 +659,10 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
+        eslint = {},
+        cssls = {},
+        tailwindcss = {},
 
         stylua = {}, -- Used to format Lua code
 
@@ -653,6 +706,7 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         -- You can add other tools here that you want Mason to install
+        'prettier',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -700,7 +754,13 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettier' },
+        typescript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        html = { 'prettier' },
+        css = { 'prettier' },
+        json = { 'prettier' },
       },
     },
   },
@@ -875,7 +935,11 @@ require('lazy').setup({
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter-intro`
     config = function()
       -- ensure basic parser are installed
-      local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+      local parsers = {
+        'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 
+        'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
+        'javascript', 'typescript', 'tsx',
+      }
       require('nvim-treesitter').install(parsers)
 
       ---@param buf integer
@@ -931,10 +995,10 @@ require('lazy').setup({
   --
   -- require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
+  require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommended keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
