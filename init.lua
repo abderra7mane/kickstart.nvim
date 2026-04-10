@@ -651,7 +651,15 @@ require('lazy').setup({
       ---@type table<string, vim.lsp.Config>
       local servers = {
         -- clangd = {},
-        -- gopls = {},
+        gopls = {
+          settings = {
+            gopls = {
+              analyses = { unusedparams = true },
+              staticcheck = true,
+              gofumpt = true,
+            },
+          }
+        },
         -- pyright = {},
         -- rust_analyzer = {},
         --
@@ -707,6 +715,8 @@ require('lazy').setup({
       vim.list_extend(ensure_installed, {
         -- You can add other tools here that you want Mason to install
         'prettier',
+        'goimports',
+        'gofumpt',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -751,9 +761,9 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
-        --
         -- You can use 'stop_after_first' to run the first available formatter from the list
+        -- python = { "isort", "black" },
+        go = { 'goimports', 'gofumpt' },
         javascript = { 'prettier' },
         typescript = { 'prettier' },
         javascriptreact = { 'prettier' },
@@ -939,6 +949,7 @@ require('lazy').setup({
         'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 
         'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
         'javascript', 'typescript', 'tsx',
+        'go', 'gomod', 'gosum', 'gowork',
       }
       require('nvim-treesitter').install(parsers)
 
