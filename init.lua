@@ -660,7 +660,7 @@ require('lazy').setup({
             },
           }
         },
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -717,6 +717,9 @@ require('lazy').setup({
         'prettier',
         'goimports',
         'gofumpt',
+        -- 'black',
+        -- 'isort',
+        'ruff',
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -762,7 +765,8 @@ require('lazy').setup({
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- python = { "isort", "black" },
+        -- python = { 'isort', 'black' },
+        python = { 'ruff_fix', 'ruff_format' },
         go = { 'goimports', 'gofumpt' },
         javascript = { 'prettier' },
         typescript = { 'prettier' },
@@ -950,6 +954,7 @@ require('lazy').setup({
         'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
         'javascript', 'typescript', 'tsx',
         'go', 'gomod', 'gosum', 'gowork',
+        'python',
       }
       require('nvim-treesitter').install(parsers)
 
