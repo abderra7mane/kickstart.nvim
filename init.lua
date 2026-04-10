@@ -661,7 +661,15 @@ require('lazy').setup({
           }
         },
         pyright = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {
+          settings = {
+            ['rust-analyzer'] = {
+              check = {
+                command = 'clippy',
+              },
+            },
+          },
+        },
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
         --    https://github.com/pmizio/typescript-tools.nvim
@@ -768,6 +776,7 @@ require('lazy').setup({
         -- python = { 'isort', 'black' },
         python = { 'ruff_fix', 'ruff_format' },
         go = { 'goimports', 'gofumpt' },
+        rust = { 'rustfmt' },
         javascript = { 'prettier' },
         typescript = { 'prettier' },
         javascriptreact = { 'prettier' },
@@ -954,7 +963,7 @@ require('lazy').setup({
         'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc',
         'javascript', 'typescript', 'tsx',
         'go', 'gomod', 'gosum', 'gowork',
-        'python',
+        'python', 'rust',
       }
       require('nvim-treesitter').install(parsers)
 
